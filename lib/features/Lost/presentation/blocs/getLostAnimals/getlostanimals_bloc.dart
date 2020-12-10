@@ -21,7 +21,7 @@ class GetlostanimalsBloc
       yield Loading();
       List<LostAnimalEntity> list = [];
 
-      var documents = event.documentList;
+      List<DocumentSnapshot> documents = event.documentList;
       documents.forEach((element) {
         Map map = element.get('position');
         GeoPoint point = map['geopoint'];

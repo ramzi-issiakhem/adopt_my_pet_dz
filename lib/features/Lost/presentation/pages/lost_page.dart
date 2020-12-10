@@ -11,6 +11,7 @@ import 'package:adopt_my_pet_dz/features/Lost/presentation/blocs/initlostpageblo
     as Init;
 import 'package:adopt_my_pet_dz/features/Lost/presentation/widgets/main_interface_lost_page.dart';
 import 'package:adopt_my_pet_dz/injections.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -89,7 +90,7 @@ class BuildBlocGetLost extends StatelessWidget {
     {
       globalSizeClass.recalcuate(MediaQuery.of(context));
 
-      return StreamBuilder(
+      return StreamBuilder<List<DocumentSnapshot>>(
           initialData: [],
           stream: lostEntity.stream,
           builder: (context, snapashot) {
@@ -102,7 +103,6 @@ class BuildBlocGetLost extends StatelessWidget {
                         if (state is Empty) {
                           BlocProvider.of<GetlostanimalsBloc>(context).add(
                               GetLostAnimals(documentList: snapashot.data));
-                          return Container();
                         } else if (state is Loading) {
                           return LoadingWidget();
                         } else if (state is Error) {
@@ -113,6 +113,7 @@ class BuildBlocGetLost extends StatelessWidget {
                           List<LostAnimalEntity> list = state.list;
                           return CreateColumnBody(list, lostEntity);
                         }
+                        return Container();
                       },
                     )),
               ],

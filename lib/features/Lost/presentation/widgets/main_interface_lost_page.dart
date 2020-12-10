@@ -4,7 +4,10 @@ import 'package:adopt_my_pet_dz/features/Lost/domain/entity/lost_animal_enity.da
 import 'package:adopt_my_pet_dz/features/Lost/domain/entity/lost_entity.dart';
 import 'package:adopt_my_pet_dz/features/Lost/presentation/widgets/borders.dart';
 import 'package:adopt_my_pet_dz/features/Lost/presentation/widgets/buttons.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CreateColumnBody extends StatefulWidget {
@@ -174,9 +177,9 @@ class _CreateColumnBodyState extends State<CreateColumnBody> {
           color: mainColor,
           thickness: 2,
         ),
-        /*RaisedButton(
+        RaisedButton(
           onPressed: () async {
-            var pos = await Location().getLocation();
+            var pos = await Geolocator.getLastKnownPosition();
             Geoflutterfire geo = Geoflutterfire();
             GeoFirePoint point =
                 geo.point(latitude: pos.latitude, longitude: pos.longitude);
@@ -190,7 +193,7 @@ class _CreateColumnBodyState extends State<CreateColumnBody> {
             });
           },
           child: Text('Plus'),
-        ),*/
+        ),
         Expanded(
           flex: 8,
           child: GoogleMap(

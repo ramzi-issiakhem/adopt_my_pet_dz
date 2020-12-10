@@ -8,7 +8,7 @@ abstract class GetlostanimalsEvent extends Equatable {
 }
 
 class GetLostAnimals extends GetlostanimalsEvent {
-  final List<dynamic> documentList;
+  final List<DocumentSnapshot> documentList;
 
   GetLostAnimals({this.documentList});
 }
