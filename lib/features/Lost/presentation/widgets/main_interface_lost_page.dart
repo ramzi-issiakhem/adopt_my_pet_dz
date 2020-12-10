@@ -156,7 +156,7 @@ class _CreateColumnBodyState extends State<CreateColumnBody> {
           color: mainColor,
           thickness: 2,
         ),
-        RaisedButton(
+        /* RaisedButton(
           onPressed: () async {
             var pos = await Geolocator.getLastKnownPosition();
             Geoflutterfire geo = Geoflutterfire();
@@ -172,7 +172,7 @@ class _CreateColumnBodyState extends State<CreateColumnBody> {
             });
           },
           child: Text('Plus'),
-        ),
+        ),*/
         Expanded(
           flex: 8,
           child: GoogleMap(
