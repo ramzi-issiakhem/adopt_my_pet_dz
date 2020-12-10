@@ -1,6 +1,7 @@
 import 'package:adopt_my_pet_dz/core/errors/exceptions.dart';
 import 'package:adopt_my_pet_dz/core/errors/failures.dart';
 import 'package:adopt_my_pet_dz/core/network/network_info.dart';
+import 'package:adopt_my_pet_dz/core/shared/shared.dart';
 import 'package:adopt_my_pet_dz/features/Authentication/data/datasources/authentication_local_data_sources.dart';
 import 'package:adopt_my_pet_dz/features/Authentication/data/datasources/authentication_remote_data_sources.dart';
 import 'package:adopt_my_pet_dz/features/Authentication/domain/entities/UserObject.dart';
@@ -47,6 +48,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     try {
       final userObject =
           await remoteDataSource.logginIn(email: email, password: password);
+      currentUser = userObject;
       return Right(userObject);
     } on LoginException catch (error) {
       switch (error.code) {
@@ -68,6 +70,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
+  // ignore: missing_return
   Future<Either<Failure, UserObject>> register(
       {String email, String password, String displayName}) async {
     var isConnected = await netWorkInfo.isConnected();
@@ -79,6 +82,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     try {
       final userObject = await remoteDataSource.createUser(
           email: email, password: password, displayName: displayName);
+      currentUser = userObject;
       return Right(userObject);
     } on LoginException catch (error) {
       switch (error.code) {
@@ -103,13 +107,5 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     } on ServerException {
       return Left(ServerFailure(message: "Error"));
     }
-  }
-
-  Future<dynamic> _connectionState() async {
-    final connectionState = await netWorkInfo.isConnected();
-    if (connectionState.runtimeType is NoInternetConnectionFailure) {
-      return Left(NoInternetConnectionFailure());
-    }
-    ;
   }
 }

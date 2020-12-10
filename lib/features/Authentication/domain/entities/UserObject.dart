@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
+// ignore: must_be_immutable
 class UserObject extends Equatable {
   String username;
   final String uid;

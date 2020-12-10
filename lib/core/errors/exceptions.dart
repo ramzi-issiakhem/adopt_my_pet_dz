@@ -15,3 +15,9 @@ class RegisterException implements Exception {
 
   RegisterException(this.code);
 }
+
+class NoPermissionException implements Exception {
+  final String string;
+
+  NoPermissionException(this.string);
+}

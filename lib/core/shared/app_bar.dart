@@ -1,23 +1,31 @@
-import 'package:adopt_my_pet_dz/main.dart';
 import 'package:flutter/material.dart';
 
 class MainAppBar {
   AppBar call(BuildContext context) {
     return AppBar(
       centerTitle: false,
-      backgroundColor: Colors.blue[400],
+      backgroundColor: Color(0xFF36CEFF),
       title: InkWell(
         child: Row(
           children: [
-            Icon(Icons.pets),
-            Text("Adopt My Pet"),
+            Icon(
+              Icons.pets,
+              color: Colors.white,
+            ),
+            Text(
+              "Adopt My Pet",
+              style: TextStyle(color: Colors.white),
+            ),
           ],
         ),
         onTap: () => Navigator.pushReplacementNamed(context, "/home"),
       ),
       actions: <Widget>[
         IconButton(
-          icon: Icon(Icons.person),
+          icon: Icon(
+            Icons.person,
+            color: Colors.white,
+          ),
           onPressed: () {
             Navigator.pushNamed(context, "/user/profile");
           },

@@ -1,3 +1,5 @@
+import 'package:adopt_my_pet_dz/core/shared/app_bar.dart';
+import 'package:adopt_my_pet_dz/core/shared/sizes.dart';
 import 'package:adopt_my_pet_dz/core/widgets/error.dart';
 import 'package:adopt_my_pet_dz/core/widgets/loading.dart';
 import 'package:adopt_my_pet_dz/features/Authentication/presentation/blocs/register_bloc/register_bloc.dart';
@@ -10,16 +12,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    globalSizeClass.recalcuate(MediaQuery.of(context));
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: Column(
-            children: [
-              Text("Adopt My Pet"),
-            ],
-          ),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(globalSizeClass.heightTopNavBar),
+          child: MainAppBar().call(context),
         ),
-        body: BlocProvider(
+        body: buildBody(),
+      ),
+    );
+  }
+
+  Widget buildBody() {
+    return ListView(
+      shrinkWrap: true,
+      children: [
+        BlocProvider(
           create: (_) => sl<RegisterBloc>(),
           child: Container(
             child: Column(children: <Widget>[
@@ -52,7 +61,7 @@ class RegisterPage extends StatelessWidget {
             ]),
           ),
         ),
-      ),
+      ],
     );
   }
 }

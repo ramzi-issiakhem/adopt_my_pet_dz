@@ -1,5 +1,5 @@
-import 'package:adopt_my_pet_dz/core/errors/failures.dart';
-import 'package:dartz/dartz.dart';
+import 'dart:async';
+
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:meta/meta.dart';
 
@@ -9,8 +9,28 @@ abstract class NetworkInfo {
 
 class NetWorkInfoImpl implements NetworkInfo {
   final DataConnectionChecker dataConnectionChecker;
+  final StreamController<bool> controller = StreamController<bool>();
 
-  NetWorkInfoImpl({@required this.dataConnectionChecker});
+  NetWorkInfoImpl({@required this.dataConnectionChecker}) {
+    dataConnectionChecker.onStatusChange.listen((DataConnectionStatus status) {
+      bool state = _connectivityStatusfromResult(status);
+
+      controller.add(state);
+    });
+  }
+
+  // ignore: missing_return
+  bool _connectivityStatusfromResult(DataConnectionStatus result) {
+    switch (result) {
+      case DataConnectionStatus.connected:
+        return true;
+        break;
+      case DataConnectionStatus.disconnected:
+        return false;
+        break;
+      default:
+    }
+  }
 
   @override
   Future<bool> isConnected() async {

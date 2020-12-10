@@ -1,5 +1,4 @@
 import 'package:adopt_my_pet_dz/core/network/network_info.dart';
-import 'package:adopt_my_pet_dz/core/shared/routes.dart';
 import 'package:adopt_my_pet_dz/features/Authentication/data/datasources/authentication_local_data_sources.dart';
 import 'package:adopt_my_pet_dz/features/Authentication/data/datasources/authentication_remote_data_sources.dart';
 import 'package:adopt_my_pet_dz/features/Authentication/data/repository/authentication_repository.dart';
@@ -10,9 +9,16 @@ import 'package:adopt_my_pet_dz/features/Authentication/domain/usecases/register
 import 'package:adopt_my_pet_dz/features/Authentication/presentation/blocs/isloggedin_bloc/isloggedin_bloc.dart';
 import 'package:adopt_my_pet_dz/features/Authentication/presentation/blocs/loggingin_bloc/loggingin_bloc.dart';
 import 'package:adopt_my_pet_dz/features/Authentication/presentation/blocs/register_bloc/register_bloc.dart';
+import 'package:adopt_my_pet_dz/features/Lost/data/datasources/local_data_sources.dart';
+import 'package:adopt_my_pet_dz/features/Lost/data/datasources/remote_data_sources.dart';
+import 'package:adopt_my_pet_dz/features/Lost/data/repositories/lost_repository_impl.dart';
+import 'package:adopt_my_pet_dz/features/Lost/domain/repositories/lost_repository.dart';
+import 'package:adopt_my_pet_dz/features/Lost/domain/usecases/init_lost_page_usecase.dart';
+import 'package:adopt_my_pet_dz/features/Lost/presentation/blocs/getLostAnimals/getlostanimals_bloc.dart';
+import 'package:adopt_my_pet_dz/features/Lost/presentation/blocs/initlostpagebloc/initlostpage_bloc.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
@@ -21,6 +27,26 @@ Future<void> init() async {
   //! Shared
   sl.registerLazySingleton<NetworkInfo>(
       () => NetWorkInfoImpl(dataConnectionChecker: sl()));
+
+  //! Lost
+  sl.registerFactory(() => InitlostpageBloc(initLostPageUseCase: sl()));
+  sl.registerFactory(() => GetlostanimalsBloc());
+
+  //* UseCase
+  sl.registerLazySingleton(() => InitLostPageUseCase(lostRepository: sl()));
+
+  //* Repository
+  sl.registerLazySingleton<LostRepository>(() => LostRepositoryImpl(
+      localDataSource: sl(), remoteDataSource: sl(), netWorkInfo: sl()));
+
+  //*DataSources
+  sl.registerLazySingleton<LostRemoteDataSource>(
+      () => LostRemoteDataSourceImpl(geo: sl()));
+  sl.registerLazySingleton<LostLocalDataSource>(
+      () => LostLocalDataSourceImpl());
+
+  //* Externals
+  sl.registerLazySingleton(() => Geoflutterfire());
 
   //! Authentication
   sl.registerFactory(() => IsloggedinBloc(isLoggedInCase: sl()));

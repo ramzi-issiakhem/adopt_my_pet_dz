@@ -1,8 +1,6 @@
 import 'package:adopt_my_pet_dz/core/errors/exceptions.dart';
-import 'package:adopt_my_pet_dz/core/errors/failures.dart';
 import 'package:adopt_my_pet_dz/features/Authentication/data/models/UserObjectModel.dart';
 import 'package:adopt_my_pet_dz/features/Authentication/domain/entities/UserObject.dart';
-import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 
@@ -74,7 +72,6 @@ class AuthenticationRemoteDataSourceImpl
     } catch (error) {
       throw ServerException(error.toString());
     }
-    ;
   }
 
   Future<UserObject> createUser(
@@ -83,14 +80,12 @@ class AuthenticationRemoteDataSourceImpl
       var result = await fireBaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
       var user = result.user;
-      await result.user
-          .updateProfile(displayName: displayName, photoURL: "default");
-      return UserObjectModel.fromFireBaseUser(result.user);
+      await user.updateProfile(displayName: displayName, photoURL: "default");
+      return UserObjectModel.fromFireBaseUser(user);
     } on FirebaseAuthException catch (error) {
       throw RegisterException(error.code);
     } catch (error) {
       throw ServerException(error.toString());
     }
-    ;
   }
 }

@@ -1,8 +1,8 @@
+import 'package:adopt_my_pet_dz/core/shared/sizes.dart';
 import 'package:adopt_my_pet_dz/core/widgets/error.dart';
 import 'package:adopt_my_pet_dz/core/widgets/loading.dart';
 import 'package:adopt_my_pet_dz/features/Authentication/presentation/pages/initialisation_page.dart';
 import 'package:adopt_my_pet_dz/injections.dart' as serviceLocator;
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'cached_images.dart' as cachedImages;

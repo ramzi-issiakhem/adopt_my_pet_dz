@@ -12,7 +12,7 @@ class ProfilePage extends StatelessWidget {
             preferredSize: Size.fromHeight(50),
             child: MainAppBar().call(context)),
         body: Column(
-          children: [Text("profile")],
+          children: [Text("profile"),],
         ),
       ),
     );
