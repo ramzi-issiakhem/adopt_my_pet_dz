@@ -35,22 +35,6 @@ class LostPage extends StatelessWidget {
   }
 }
 
-/*class BuildBlocInit extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return GoogleMap(
-      markers: {},
-      //onMapCreated: (controller) => _onMapCreated(controller),
-      initialCameraPosition: CameraPosition(
-        target: LatLng(0, 0),
-        zoom: 10,
-      ),
-      myLocationEnabled: true,
-      mapType: MapType.normal,
-    );
-  }
-}*/
-
 class BuildBlocInit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -58,7 +42,6 @@ class BuildBlocInit extends StatelessWidget {
       create: (_) => sl<Init.InitlostpageBloc>(),
       child: BlocBuilder<Init.InitlostpageBloc, Init.InitlostpageState>(
           builder: (context, state) {
-        print("state --> $state");
         if (state is Init.Empty) {
           BlocProvider.of<Init.InitlostpageBloc>(context)
               .add(Init.InitLostPageEvent());
@@ -81,28 +64,67 @@ class BuildBlocInit extends StatelessWidget {
 }
 
 // ignore: must_be_immutable
-class BuildBlocGetLost extends StatelessWidget {
+class BuildBlocGetLost extends StatefulWidget {
   LostEntity lostEntity;
   BuildBlocGetLost(this.lostEntity);
 
   @override
-  Widget build(BuildContext context) {
-    {
-      globalSizeClass.recalcuate(MediaQuery.of(context));
+  _BuildBlocGetLostState createState() => _BuildBlocGetLostState();
+}
 
-      return StreamBuilder<List<DocumentSnapshot>>(
+class _BuildBlocGetLostState extends State<BuildBlocGetLost> {
+  List<LostAnimalEntity> list = [];
+
+  @override
+  Widget build(BuildContext context) {
+    globalSizeClass.recalcuate(MediaQuery.of(context));
+    widget.lostEntity.stream.listen((event) {
+      setState(() {
+        list.clear();
+        event.forEach((element) {
+          Map map = element.get('position');
+          GeoPoint point = map['geopoint'];
+          list.add(LostAnimalEntity(
+              shortDescription: element.get("shortDescription"),
+              description: element.get("shortDescription"),
+              name: element.get("name"),
+              position: LatLng(point.latitude, point.longitude),
+              imageUrl: element.get("imageUrl")));
+        });
+      });
+    });
+    return Column(
+      children: [CreateColumnBody(list, widget.lostEntity)],
+    );
+  }
+}
+
+/*return StreamBuilder<List<DocumentSnapshot>>(
           initialData: [],
           stream: lostEntity.stream,
-          builder: (context, snapashot) {
-            return Column(
+          builder: (context, AsyncSnapshot<List<DocumentSnapshot>> snapashot) {
+            if (snapashot.hasError || snapashot == null) {
+              return Center(
+                child: Text("error"),
+              );
+            } else if (!snapashot.hasData) {
+              return Center(
+                child: Text("Vide"),
+              );
+            } else if (snapashot.hasData) {
+              
+            }
+
+            /*return Column(
               children: [
-                BlocProvider(
+                BlocProvider<GetlostanimalsBloc>(
                     create: (_) => sl<GetlostanimalsBloc>(),
                     child: BlocBuilder<GetlostanimalsBloc, GetlostanimalsState>(
                       builder: (context, state) {
                         if (state is Empty) {
                           BlocProvider.of<GetlostanimalsBloc>(context).add(
                               GetLostAnimals(documentList: snapashot.data));
+                          return Container();
                         } else if (state is Loading) {
                           return LoadingWidget();
                         } else if (state is Error) {
@@ -110,15 +132,11 @@ class BuildBlocGetLost extends StatelessWidget {
                             message: state.message,
                           );
                         } else if (state is Loaded) {
-                          List<LostAnimalEntity> list = state.list;
-                          return CreateColumnBody(list, lostEntity);
+                          return CreateColumnBody(state.list, lostEntity);
                         }
                         return Container();
                       },
                     )),
               ],
-            );
-          });
-    }
-  }
-}
+            );*/
+          });*/

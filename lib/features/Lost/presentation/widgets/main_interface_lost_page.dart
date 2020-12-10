@@ -10,47 +10,26 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+// ignore: must_be_immutable
 class CreateColumnBody extends StatefulWidget {
-  GoogleMapController controller;
-
   List<LostAnimalEntity> list;
   LostEntity lostEntity;
 
   CreateColumnBody(this.list, this.lostEntity);
 
   @override
-  _CreateColumnBodyState createState() => _CreateColumnBodyState(lostEntity);
+  _CreateColumnBodyState createState() => _CreateColumnBodyState();
 }
 
 class _CreateColumnBodyState extends State<CreateColumnBody> {
-  LostEntity lostEntity;
-  _CreateColumnBodyState(this.lostEntity);
+  GoogleMapController _controller;
+
+  _CreateColumnBodyState();
 
   _onMapCreated(GoogleMapController controller) {
     setState(() {
-      controller = controller;
+      _controller = controller;
     });
-  }
-
-  Set<Marker> _getMarkers(List<LostAnimalEntity> nearestAnimalsList) {
-    Set<Marker> markers = {};
-    if (nearestAnimalsList.isNotEmpty) {
-      nearestAnimalsList.forEach((element) {
-        var marker = Marker(
-          position: element.position,
-          icon: BitmapDescriptor.defaultMarker,
-          infoWindow: InfoWindow(
-            title: element.name,
-            snippet: element.shortDescription,
-          ),
-          markerId: MarkerId(element.name.toString()),
-        );
-        markers.add(marker);
-      });
-      return markers;
-    } else {
-      return {};
-    }
   }
 
   @override
@@ -154,7 +133,7 @@ class _CreateColumnBodyState extends State<CreateColumnBody> {
                             child: BuildButton(
                                 text: "Go To",
                                 onTap: () {
-                                  widget.controller.animateCamera(
+                                  _controller.animateCamera(
                                       CameraUpdate.newCameraPosition(
                                           CameraPosition(
                                     target: widget.list[index].position,
@@ -200,7 +179,7 @@ class _CreateColumnBodyState extends State<CreateColumnBody> {
             markers: _getMarkers(widget.list),
             onMapCreated: (controller) => _onMapCreated(controller),
             initialCameraPosition: CameraPosition(
-              target: lostEntity.userPos,
+              target: widget.lostEntity.userPos,
               zoom: 10,
             ),
             myLocationEnabled: true,
@@ -209,5 +188,26 @@ class _CreateColumnBodyState extends State<CreateColumnBody> {
         ),
       ]),
     );
+  }
+
+  Set<Marker> _getMarkers(List<LostAnimalEntity> nearestAnimalsList) {
+    Set<Marker> markers = {};
+    if (nearestAnimalsList.isNotEmpty) {
+      nearestAnimalsList.forEach((element) {
+        var marker = Marker(
+          position: element.position,
+          icon: BitmapDescriptor.defaultMarker,
+          infoWindow: InfoWindow(
+            title: element.name,
+            snippet: element.shortDescription,
+          ),
+          markerId: MarkerId(element.name.toString()),
+        );
+        markers.add(marker);
+      });
+      return markers;
+    } else {
+      return {};
+    }
   }
 }

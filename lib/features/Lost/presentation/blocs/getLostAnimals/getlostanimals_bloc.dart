@@ -22,17 +22,19 @@ class GetlostanimalsBloc
       List<LostAnimalEntity> list = [];
 
       List<DocumentSnapshot> documents = event.documentList;
-      documents.forEach((element) {
-        Map map = element.get('position');
-        GeoPoint point = map['geopoint'];
+      if (documents.isNotEmpty) {
+        documents.forEach((element) {
+          Map map = element.get('position');
+          GeoPoint point = map['geopoint'];
 
-        list.add(LostAnimalEntity(
-            shortDescription: element.get("shortDescription"),
-            description: element.get("shortDescription"),
-            name: element.get("name"),
-            position: LatLng(point.latitude, point.longitude),
-            imageUrl: element.get("imageUrl")));
-      });
+          list.add(LostAnimalEntity(
+              shortDescription: element.get("shortDescription"),
+              description: element.get("shortDescription"),
+              name: element.get("name"),
+              position: LatLng(point.latitude, point.longitude),
+              imageUrl: element.get("imageUrl")));
+        });
+      }
 
       yield Loaded(list);
     }

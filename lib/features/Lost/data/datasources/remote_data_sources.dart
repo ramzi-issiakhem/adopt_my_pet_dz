@@ -28,22 +28,21 @@ class LostRemoteDataSourceImpl implements LostRemoteDataSource {
   Future<LostEntity> getLostEntity() async {
     try {
       Position userLocation = await getLocation();
-      Stream<dynamic> query;
 
-      var collectionReference =
+      Query collectionReference =
           FirebaseFirestore.instance.collection("lost_animals");
       String field = "position";
 
       GeoFirePoint center = geo.point(
           latitude: userLocation.latitude, longitude: userLocation.longitude);
 
-      query = geo
+      Stream<List<DocumentSnapshot>> stream = geo
           .collection(collectionRef: collectionReference)
           .within(center: center, radius: 500, field: field, strictMode: true);
 
       return LostEntity(
           userPos: LatLng(userLocation.latitude, userLocation.longitude),
-          stream: query);
+          stream: stream);
     } on NoPermissionException catch (e) {
       throw NoPermissionException(e.string);
     } catch (e) {
